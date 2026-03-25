@@ -1,0 +1,86 @@
+[
+  {
+    "id": "q001",
+    "patientId": "patient001",
+    "patientName": "赵明",
+    "doctorId": "doc001",
+    "doctorName": "张伟医生",
+    "question": "最近总是感觉胸闷气短,特别是爬楼梯的时候,这是什么原因?",
+    "submitTime": "2025-11-02T09:30:00",
+    "status": "answered",
+    "answer": "根据您的描述,可能是心脏功能问题。建议您做个心电图和心脏彩超检查,同时注意休息,避免剧烈运动。",
+    "answerTime": "2025-11-02T09:45:00"
+  },
+  {
+    "id": "q002",
+    "patientId": "patient002",
+    "patientName": "孙丽",
+    "doctorId": "doc002",
+    "doctorName": "李娜医生",
+    "question": "孩子5岁,最近总是咳嗽,晚上更严重,需要吃什么药?",
+    "submitTime": "2025-11-02T10:15:00",
+    "status": "pending",
+    "answer": null,
+    "answerTime": null
+  },
+  {
+    "id": "q003",
+    "patientId": "patient003",
+    "patientName": "周杰",
+    "doctorId": "doc003",
+    "doctorName": "王强医生",
+    "question": "打篮球时扭伤了脚踝,肿了很大一块,该怎么处理?",
+    "submitTime": "2025-11-02T11:00:00",
+    "status": "answered",
+    "answer": "立即冰敷,抬高患肢,24小时内不要热敷。建议拍个X光片排除骨折。",
+    "answerTime": "2025-11-02T11:20:00"
+  },
+  {
+    "id": "q004",
+    "patientId": "patient001",
+    "patientName": "赵明",
+    "doctorId": "doc001",
+    "doctorName": "张伟医生",
+    "question": "血压最近有点高,早上测量是145/95,需要吃降压药吗?",
+    "submitTime": "2025-11-02T14:20:00",
+    "status": "pending",
+    "answer": null,
+    "answerTime": null
+  },
+  {
+    "id": "q005",
+    "patientId": "patient004",
+    "patientName": "吴芳",
+    "doctorId": "doc005",
+    "doctorName": "陈杰医生",
+    "question": "经常胃痛,吃完饭后更明显,是不是胃炎?",
+    "submitTime": "2025-11-02T15:30:00",
+    "status": "pending",
+    "answer": null,
+    "answerTime": null
+  },
+  {
+    "id": "q006",
+    "patientId": "patient005",
+    "patientName": "郑浩",
+    "doctorId": "doc001",
+    "doctorName": "张伟医生",
+    "question": "体检发现心律不齐,平时没什么感觉,严重吗?",
+    "submitTime": "2025-11-02T16:00:00",
+    "status": "pending",
+    "answer": null,
+    "answerTime": null
+  },
+  {
+    "id": "q007",
+    "patientId": "patient002",
+    "patientName": "孙丽",
+    "doctorId": "doc002",
+    "doctorName": "李娜医生",
+    "question": "宝宝6个月,可以开始添加辅食了吗?应该吃什么?",
+    "submitTime": "2025-11-02T16:45:00",
+    "status": "answered",
+    "answer": "6个月可以开始添加辅食了。建议从米粉开始,然后逐步添加蔬菜泥、水果泥。注意一次只添加一种新食物,观察3-5天。",
+    "answerTime": "2025-11-02T17:00:00"
+  }
+]

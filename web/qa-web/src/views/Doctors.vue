@@ -1,0 +1,275 @@
+<template>
+  <div class="doctors-page">
+    <div class="page-header">
+      <h1>医生团队</h1>
+      <p>我们的专业医疗团队随时为您服务</p>
+    </div>
+
+    <div class="doctors-container">
+      <!-- 加载状态 -->
+      <div v-if="loading" class="loading-container">
+        <a-spin size="large" tip="加载中..." />
+      </div>
+
+      <!-- 错误状态 -->
+      <div v-else-if="error" class="error-container">
+        <a-alert
+          message="加载失败"
+          description="获取医生列表时出现错误，请稍后重试"
+          type="error"
+          show-icon
+        />
+        <a-button type="primary" @click="fetchDoctors" style="margin-top: 16px">
+          重新加载
+        </a-button>
+      </div>
+
+      <!-- 空数据状态 -->
+      <div v-else-if="doctors.length === 0" class="empty-container">
+        <a-empty description="暂无医生信息" />
+      </div>
+
+      <!-- 医生列表 -->
+      <div v-else class="doctors-grid">
+        <a-card
+          v-for="doctor in doctors"
+          :key="doctor.id"
+          class="doctor-card"
+          :class="{ 'active': doctor.isActive }"
+        >
+          <div class="card-header">
+            <img :src="doctor.avatar" :alt="doctor.name" class="doctor-avatar" />
+            <a-badge
+              :status="doctor.isActive ? 'processing' : 'default'"
+              :text="doctor.isActive ? '在线' : '离线'"
+            />
+          </div>
+          <div class="card-body">
+            <h3>{{ doctor.name }}</h3>
+            <p class="doctor-title">{{ doctor.title }}</p>
+            <p class="doctor-department">{{ doctor.department }}</p>
+            <p class="doctor-experience">{{ doctor.experience }}</p>
+            <div class="doctor-specialties">
+              <a-tag v-for="(specialty, index) in doctor.specialties" :key="index" color="blue">
+                {{ specialty }}
+              </a-tag>
+            </div>
+          </div>
+          <div class="card-footer">
+            <a-button
+              type="primary"
+              block
+              :disabled="!doctor.isActive"
+              @click="goToConsultation(doctor)"
+            >
+              {{ doctor.isActive ? '进入诊室' : '暂未开放' }}
+            </a-button>
+          </div>
+        </a-card>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+interface Doctor {
+  id: string;
+  username: string;
+  name: string;
+  title: string;
+  department: string;
+  avatar: string;
+  experience: string;
+  specialties: string[];
+  isActive: boolean;
+}
+
+const router = useRouter();
+const doctors = ref<Doctor[]>([]);
+const loading = ref(false);
+const error = ref(false);
+
+const fetchDoctors = async () => {
+  loading.value = true;
+  error.value = false;
+  
+  try {
+    const response = await fetch('http://localhost:8080/api/doctors');
+    const data = await response.json();
+    
+    if (data.success) {
+      // 处理后端返回的specialties字段，确保它是数组格式
+      doctors.value = data.data.map((doctor: any) => ({
+        ...doctor,
+        isActive: doctor.isActive,
+        specialties: typeof doctor.specialties === 'string' 
+          ? JSON.parse(doctor.specialties) 
+          : doctor.specialties
+      }));
+    } else {
+      error.value = true;
+    }
+  } catch (err) {
+    console.error('获取医生列表失败:', err);
+    error.value = true;
+  } finally {
+    loading.value = false;
+  }
+};
+
+const goToConsultation = (doctor: Doctor) => {
+  router.push(`/consultation/${doctor.username}`);
+};
+
+onMounted(() => {
+  fetchDoctors();
+});
+</script>
+
+<style scoped>
+.doctors-page {
+  min-height: calc(100vh - 64px);
+  padding-top: 64px;
+  background: #f0f2f5;
+}
+
+.page-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 80px 24px;
+  text-align: center;
+  color: #fff;
+}
+
+.page-header h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.page-header p {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+.doctors-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.doctors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.doctor-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s;
+}
+
+.doctor-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+.doctor-card.active {
+  border: 2px solid #52c41a;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.doctor-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.card-body h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.doctor-title {
+  font-size: 16px;
+  color: #1890ff;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.doctor-department {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.doctor-experience {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 16px;
+}
+
+.doctor-specialties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 32px;
+  }
+
+  .page-header p {
+    font-size: 16px;
+  }
+
+  .doctors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .loading-container,
+  .error-container,
+  .empty-container {
+    min-height: 300px;
+  }
+}
+</style>
